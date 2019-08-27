@@ -78,17 +78,22 @@ public class PassengerService {
 	public Passenger remove(Passenger entity) {
 	
 		Passenger response = entity;
-		try {
-
-			this.repo.delete(entity);
-
-			
-		} catch (Exception e) {
-             e.printStackTrace();
-             response =null;
-		}
 		
-		return  response;
+		
+            boolean beforeDelete =this.repo.existsById(entity.getId());			
+		
+            if(beforeDelete) {
+            	this.repo.delete(entity);
+            }
+            
+            boolean afterDelete =this.repo.existsById(entity.getId());			
+
+             if(beforeDelete!=afterDelete) {
+            	 return response;
+             } else {
+            	 return null;
+             }
+            
 	}
 	
 	public Passenger update(Passenger entity) {
