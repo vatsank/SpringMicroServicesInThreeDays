@@ -17,6 +17,7 @@ public class PassengerService {
 
 	@Autowired
 	private PassengerRepository repo;
+	
 	@Autowired
 	private HashMap<Long,Passenger> details;
 
@@ -41,25 +42,27 @@ public class PassengerService {
 	public Passenger addPassenger(Passenger object)  {
 		
 		
-		Passenger status = details.get(object.getId());
-		
-		Passenger response =null;
-		
-		if(status ==null) {
-		
-			details.put(object.getId(), object);
-			
-			response = object;
-		} 		
-		return response;
+//		Passenger status = details.get(object.getId());
+//		
+//		Passenger response =null;
+//		
+//		if(status ==null) {
+//		
+//			details.put(object.getId(), object);
+//			
+//			response = object;
+//		} 		
+		return this.repo.save(object);
 	}
 	
 	public Passenger findById(long id) {
 		
-		return details.get(id);
+		//return details.get(id);
+		
+		return this.repo.findById(id).get();
 	}
 	
-	public List<Passenger> findAll(){
+	public Iterable<Passenger> findAll(){
 		
 		System.out.println(details);
 		List<Passenger> list = this.details.entrySet().stream().
@@ -67,6 +70,29 @@ public class PassengerService {
 				        collect(Collectors.toList());
 		
 		System.out.println(list);
-		return list;
+		// return list;
+		
+		return this.repo.findAll();
+	}
+	
+	public Passenger remove(Passenger entity) {
+	
+		Passenger response = entity;
+		try {
+
+			this.repo.delete(entity);
+
+			
+		} catch (Exception e) {
+             e.printStackTrace();
+             response =null;
+		}
+		
+		return  response;
+	}
+	
+	public Passenger update(Passenger entity) {
+		
+		return addPassenger(entity);
 	}
 }
