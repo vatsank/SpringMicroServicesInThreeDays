@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,22 +82,16 @@ public class PassengerController {
 //	
 	
 	@DeleteMapping("/passenger")
-	public Passenger remove(@RequestBody Passenger entity) throws ResponseStatusException {
+	public ResponseEntity<Passenger> remove(@RequestBody Passenger entity) throws DataNotFoundException {
 		
 		Passenger resp=this.service.remove(entity);
 		
 		if(resp==null) {
 			
-			try {
-				resp=new Passenger();
-
-				throw new DataNotFoundException(entity.getId() + " Data Not Found");
-			} catch (DataNotFoundException ex) {
-				
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Need Correct Entity",ex);
-			}
+			 throw new DataNotFoundException("Required Entity With Id Not Present");
 		}
-		return resp;
+				
+		return new ResponseEntity<>(resp,HttpStatus.CONFLICT);
 	}
 	
 	@PutMapping("/passenger")

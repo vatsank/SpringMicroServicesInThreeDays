@@ -43,9 +43,5 @@ public class AppConfig {
 
 	}
 
-	@Bean
-	public ExceptionResponse excepResp() {
-		
-		return new ExceptionResponse();
-	}
+	
 }
